@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Gemini 테스트</title>
+</head>
+<body>
+  <input id="prompt" placeholder="프롬프트 입력" />
+  <button onclick="ask()">질문 보내기</button>
+  <pre id="result"></pre>
+  
+  <script>
+    function ask() {
+      const prompt = document.getElementById("prompt").value;
+      fetch("http://3.34.125.188:5000/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").innerText = data.response || data.error;
+      })
+      .catch(error => {
+        document.getElementById("result").innerText = "요청 실패: " + error;
+      });
+    }
+  </script>
+  
+</body>
+</html>

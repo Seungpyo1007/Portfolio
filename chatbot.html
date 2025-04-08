@@ -4,9 +4,7 @@
     💬 Seungpyo Chatbot
     <button class="expand-btn" title="기록 보기">🔍</button>
   </div>
-  <div class="chatbot-body" id="chat">
-    <div class="message bot">안녕하세요! 무엇을 도와드릴까요?</div>
-  </div>
+  <div class="chatbot-body" id="chat"></div>  
   <div class="chatbot-input">
     <input type="text" id="prompt" placeholder="메시지를 입력하세요..." />
   </div>
@@ -180,4 +178,9 @@
       top.location.href = "index.html";
     }, 400); // 0.4초 후 이동
   });
+
+  window.addEventListener("DOMContentLoaded", () => {
+  const welcomeDiv = appendMessage("bot", "");
+  typeText(welcomeDiv, "안녕하세요! 무엇을 도와드릴까요?");
+});
 </script>

@@ -2,16 +2,155 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Gemini 테스트</title>
+  <title>프롬프트 챗봇</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .prompts {
+      padding: 10px;
+      background: #1f1f1f;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .prompt-btn {
+      background: #2a2a2a;
+      border: none;
+      color: #ccc;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .prompt-btn:hover {
+      background-color: #00c896;
+      color: #000;
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 80%;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.4s ease forwards;
+    }
+
+    .user {
+      background-color: #1f1f1f;
+      align-self: flex-end;
+    }
+
+    .bot {
+      background-color: #2e2e2e;
+      align-self: flex-start;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .input-area {
+      display: flex;
+      padding: 12px;
+      border-top: 1px solid #333;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    .input-area button {
+      margin-left: 10px;
+      padding: 10px 16px;
+      background-color: #00c896;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <input id="prompt" placeholder="프롬프트 입력" />
-  <button onclick="ask()">질문 보내기</button>
-  <pre id="result"></pre>
-  
+
+  <div class="prompts">
+    <button class="prompt-btn" onclick="insertPrompt('너 누구야?')">너 누구야?</button>
+    <button class="prompt-btn" onclick="insertPrompt('오늘 날씨 어때?')">날씨</button>
+    <button class="prompt-btn" onclick="insertPrompt('아이디어 좀 줘')">아이디어</button>
+  </div>
+
+  <div class="chat-container" id="chat"></div>
+
+  <div class="input-area">
+    <input type="text" id="prompt" placeholder="메시지를 입력하세요..." />
+    <button onclick="ask()">전송</button>
+  </div>
+
   <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("prompt");
+
+    function insertPrompt(text) {
+      input.value = text;
+      input.focus();
+    }
+
+    function appendMessage(sender, text = "") {
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+      return div;
+    }
+
+    function typeText(element, text, speed = 20) {
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          chat.scrollTop = chat.scrollHeight;
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
     function ask() {
-      const prompt = document.getElementById("prompt").value;
+      const prompt = input.value.trim();
+      if (!prompt) return;
+
+      appendMessage("user", prompt);
+      input.value = "";
+
+      const botDiv = appendMessage("bot", "생각 중...");
+
       fetch("https://3.34.125.188:443/ask", {
         method: "POST",
         headers: {
@@ -19,15 +158,21 @@
         },
         body: JSON.stringify({ prompt })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
-        document.getElementById("result").innerText = data.response || data.error;
+        botDiv.textContent = "";
+        const response = data.response || data.error || "응답이 없습니다.";
+        typeText(botDiv, response);
       })
       .catch(error => {
-        document.getElementById("result").innerText = "요청 실패: " + error;
+        botDiv.textContent = "에러 발생: " + error.message;
       });
     }
+
+    input.addEventListener("keypress", e => {
+      if (e.key === "Enter") ask();
+    });
   </script>
-  
+
 </body>
 </html>

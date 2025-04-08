@@ -1,5 +1,5 @@
 <!-- Chatbot UI -->
-<div class="chatbot slide delay04">
+<div id="chatbot" class="chatbot" style="display: flex;">
     <div class="chatbot-header">💬 Seungpyo Chatbot</div>
     <div class="chatbot-body" id="chat">
       <div class="message bot">안녕하세요! 무엇을 도와드릴까요?</div>
@@ -17,61 +17,79 @@
       right: 20px;
       width: 320px;
       max-height: 500px;
-      background: #fff;
+      background: #ffffff;
       color: #000;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
       display: flex;
       flex-direction: column;
       font-family: 'Geist', sans-serif;
       z-index: 1000;
+      overflow: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    @media (max-width: 600px) {
+    .chatbot {
+      width: 90%;
+      right: 5%;
+      bottom: 10px;
+      }
     }
   
     .chatbot-header {
-      background: #f4f4f4;
-      padding: 12px;
+      background: #f9f9f9;
+      padding: 14px;
       font-weight: bold;
-      border-bottom: 1px solid #ddd;
       text-align: center;
+      font-size: 16px;
     }
   
     .chatbot-body {
       flex: 1;
-      padding: 12px;
+      padding: 14px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      scrollbar-width: none;
+    }
+  
+    .chatbot-body::-webkit-scrollbar {
+      display: none;
     }
   
     .chatbot-input {
-      border-top: 1px solid #ddd;
+      background: #f5f5f5;
     }
   
     .chatbot-input input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border: none;
       outline: none;
       font-size: 14px;
+      background: transparent;
     }
   
     .message {
       max-width: 80%;
       padding: 10px 14px;
-      border-radius: 10px;
+      border-radius: 14px;
       font-size: 14px;
       line-height: 1.4;
+      word-wrap: break-word;
+      white-space: pre-wrap;
     }
   
     .message.bot {
-      background: #eee;
+      background: #f1f1f1;
       align-self: flex-start;
     }
   
     .message.user {
-      background: #cce5ff;
+      background: #dbeafe;
       align-self: flex-end;
     }
   </style>

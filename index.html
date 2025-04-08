@@ -10,22 +10,63 @@
 	<!-- Document Title -->
     <title>Seungpyo Hong</title>
 
-<!-- Chatbot iframe -->
-<iframe 
-  src="chatbot.html" 
-  width="340" 
-  height="520" 
-  style="
-    position: fixed; 
-    bottom: 20px; 
-    right: 20px; 
-    border: none; 
-    border-radius: 12px; 
-    box-shadow: 0 0 20px rgba(0,0,0,0.1); 
-    z-index: 9999;
-  "
-  title="Seungpyo Chatbot"
-></iframe>
+	<iframe id="chatbot-iframe"
+	src="./chatbot.html"
+	style="
+	  position: fixed;
+	  bottom: 100px;
+	  right: 20px;
+	  width: 320px;
+	  height: 500px;
+	  border: none;
+	  border-radius: 20px;
+	  z-index: 9998;
+	  visibility: hidden;
+	  opacity: 0;
+	  pointer-events: none;
+	  transition: all 0.3s ease;
+  "></iframe>
+  
+  <!-- 아이콘 버튼 -->
+  <button id="chatbot-toggle"
+	style="
+	  position: fixed;
+	  bottom: 20px;
+	  right: 20px;
+	  width: 60px;
+	  height: 60px;
+	  border-radius: 50%;
+	  background: black;
+	  color: white;
+	  font-size: 24px;
+	  z-index: 9999;
+	  border: none;
+	  cursor: pointer;
+  ">
+	💬
+  </button>
+  
+  <script>
+	const iframe = document.getElementById("chatbot-iframe");
+	const toggle = document.getElementById("chatbot-toggle");
+	let isOpen = false;
+  
+	toggle.addEventListener("click", () => {
+	  isOpen = !isOpen;
+	  if (isOpen) {
+		iframe.style.visibility = "visible";
+		iframe.style.opacity = "1";
+		iframe.style.pointerEvents = "auto";
+	  } else {
+		iframe.style.visibility = "hidden";
+		iframe.style.opacity = "0";
+		iframe.style.pointerEvents = "none";
+	  }
+	});
+  </script>
+  
+  
+
 
 
   	<!-- Primary Meta Tags -->

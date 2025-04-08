@@ -1,155 +1,183 @@
 <!-- Chatbot UI -->
 <div id="chatbot" class="chatbot" style="display: flex;">
-    <div class="chatbot-header">💬 Seungpyo Chatbot</div>
-    <div class="chatbot-body" id="chat">
-      <div class="message bot">안녕하세요! 무엇을 도와드릴까요?</div>
-    </div>
-    <div class="chatbot-input">
-      <input type="text" id="prompt" placeholder="메시지를 입력하세요..." />
-    </div>
+  <div class="chatbot-header">
+    💬 Seungpyo Chatbot
+    <button class="expand-btn" title="기록 보기">🔍</button>
   </div>
-  
-  <!-- Chatbot Style -->
-  <style>
-    .chatbot {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 320px;
-      max-height: 500px;
-      background: #ffffff;
-      color: #000;
-      border: none;
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-      display: flex;
-      flex-direction: column;
-      font-family: 'Geist', sans-serif;
-      z-index: 1000;
-      overflow: hidden;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
+  <div class="chatbot-body" id="chat">
+    <div class="message bot">안녕하세요! 무엇을 도와드릴까요?</div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="prompt" placeholder="메시지를 입력하세요..." />
+  </div>
+</div>
 
-    @media (max-width: 600px) {
+<!-- Chatbot Style -->
+<style>
+  .chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    max-height: 500px;
+    background: #ffffff;
+    color: #000;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Geist', sans-serif;
+    z-index: 1000;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+  }
+
+  .chatbot.expand {
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 600px) {
     .chatbot {
       width: 90%;
       right: 5%;
       bottom: 10px;
+    }
+  }
+
+  .chatbot-header {
+    background: #f9f9f9;
+    padding: 14px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 16px;
+    position: relative;
+  }
+
+  .expand-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .chatbot-body {
+    flex: 1;
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: none;
+  }
+
+  .chatbot-body::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chatbot-input {
+    background: #f5f5f5;
+  }
+
+  .chatbot-input input {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+  }
+
+  .message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .message.bot {
+    background: #f1f1f1;
+    align-self: flex-start;
+  }
+
+  .message.user {
+    background: #dbeafe;
+    align-self: flex-end;
+  }
+</style>
+
+<!-- Chatbot Script -->
+<script>
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("prompt");
+  const expandBtn = document.querySelector(".expand-btn");
+  const chatbot = document.getElementById("chatbot");
+
+  function appendMessage(sender, text = "") {
+    const div = document.createElement("div");
+    div.className = `message ${sender}`;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+    return div;
+  }
+
+  function typeText(element, text, speed = 20) {
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        chat.scrollTop = chat.scrollHeight;
+        i++;
+        setTimeout(type, speed);
       }
     }
-  
-    .chatbot-header {
-      background: #f9f9f9;
-      padding: 14px;
-      font-weight: bold;
-      text-align: center;
-      font-size: 16px;
-    }
-  
-    .chatbot-body {
-      flex: 1;
-      padding: 14px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      scrollbar-width: none;
-    }
-  
-    .chatbot-body::-webkit-scrollbar {
-      display: none;
-    }
-  
-    .chatbot-input {
-      background: #f5f5f5;
-    }
-  
-    .chatbot-input input {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      outline: none;
-      font-size: 14px;
-      background: transparent;
-    }
-  
-    .message {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 14px;
-      line-height: 1.4;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-    }
-  
-    .message.bot {
-      background: #f1f1f1;
-      align-self: flex-start;
-    }
-  
-    .message.user {
-      background: #dbeafe;
-      align-self: flex-end;
-    }
-  </style>
-  
-  <!-- Chatbot Script -->
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("prompt");
-  
-    function appendMessage(sender, text = "") {
-      const div = document.createElement("div");
-      div.className = `message ${sender}`;
-      div.textContent = text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-      return div;
-    }
-  
-    function typeText(element, text, speed = 20) {
-      let i = 0;
-      function type() {
-        if (i < text.length) {
-          element.textContent += text.charAt(i);
-          chat.scrollTop = chat.scrollHeight;
-          i++;
-          setTimeout(type, speed);
-        }
-      }
-      type();
-    }
-  
-    function ask() {
-      const prompt = input.value.trim();
-      if (!prompt) return;
-  
-      appendMessage("user", prompt);
-      input.value = "";
-  
-      const botDiv = appendMessage("bot", "생각 중...");
-  
-      fetch("https://3.34.125.188:443/ask", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt })
-      })
-      .then(res => res.json())
-      .then(data => {
-        botDiv.textContent = "";
-        const response = data.response || data.error || "응답이 없습니다.";
-        typeText(botDiv, response);
-      })
-      .catch(error => {
-        botDiv.textContent = "에러 발생: " + error.message;
-      });
-    }
-  
-    input.addEventListener("keypress", e => {
-      if (e.key === "Enter") ask();
+    type();
+  }
+
+  function ask() {
+    const prompt = input.value.trim();
+    if (!prompt) return;
+
+    appendMessage("user", prompt);
+    input.value = "";
+
+    const botDiv = appendMessage("bot", "생각 중...");
+
+    fetch("https://3.34.125.188:443/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    })
+    .then(res => res.json())
+    .then(data => {
+      botDiv.textContent = "";
+      const response = data.response || data.error || "응답이 없습니다.";
+      typeText(botDiv, response);
+    })
+    .catch(error => {
+      botDiv.textContent = "에러 발생: " + error.message;
     });
-  </script>
-  
+  }
+
+  input.addEventListener("keypress", e => {
+    if (e.key === "Enter") ask();
+  });
+
+  // 🔍 돋보기 버튼 클릭 시 애니메이션 + 이동
+  expandBtn.addEventListener("click", () => {
+    chatbot.classList.add("expand");
+    setTimeout(() => {
+      top.location.href = "index.html";
+    }, 400); // 0.4초 후 이동
+  });
+</script>

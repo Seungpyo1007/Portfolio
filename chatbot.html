@@ -1,0 +1,137 @@
+<!-- Chatbot UI -->
+<div class="chatbot slide delay04">
+    <div class="chatbot-header">💬 Seungpyo Chatbot</div>
+    <div class="chatbot-body" id="chat">
+      <div class="message bot">안녕하세요! 무엇을 도와드릴까요?</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" id="prompt" placeholder="메시지를 입력하세요..." />
+    </div>
+  </div>
+  
+  <!-- Chatbot Style -->
+  <style>
+    .chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      max-height: 500px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      font-family: 'Geist', sans-serif;
+      z-index: 1000;
+    }
+  
+    .chatbot-header {
+      background: #f4f4f4;
+      padding: 12px;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+  
+    .chatbot-body {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .chatbot-input {
+      border-top: 1px solid #ddd;
+    }
+  
+    .chatbot-input input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+  
+    .message {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  
+    .message.bot {
+      background: #eee;
+      align-self: flex-start;
+    }
+  
+    .message.user {
+      background: #cce5ff;
+      align-self: flex-end;
+    }
+  </style>
+  
+  <!-- Chatbot Script -->
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("prompt");
+  
+    function appendMessage(sender, text = "") {
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+      return div;
+    }
+  
+    function typeText(element, text, speed = 20) {
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          chat.scrollTop = chat.scrollHeight;
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+  
+    function ask() {
+      const prompt = input.value.trim();
+      if (!prompt) return;
+  
+      appendMessage("user", prompt);
+      input.value = "";
+  
+      const botDiv = appendMessage("bot", "생각 중...");
+  
+      fetch("https://3.34.125.188:443/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt })
+      })
+      .then(res => res.json())
+      .then(data => {
+        botDiv.textContent = "";
+        const response = data.response || data.error || "응답이 없습니다.";
+        typeText(botDiv, response);
+      })
+      .catch(error => {
+        botDiv.textContent = "에러 발생: " + error.message;
+      });
+    }
+  
+    input.addEventListener("keypress", e => {
+      if (e.key === "Enter") ask();
+    });
+  </script>
+  

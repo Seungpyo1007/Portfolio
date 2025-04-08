@@ -1,4 +1,4 @@
-@font-face {
+/* @font-face {
     font-family: 'Geist';
     src: url('../fonts/Geist-Light.eot');
     src: url('../fonts/Geist-Light.eot?#iefix') format('embedded-opentype'),
@@ -41,7 +41,7 @@
     font-weight: 600;
     font-style: normal;
     font-display: swap;
-}
+} */
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -63,7 +63,7 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 	font-size: 16px; /* Base font size */
-    font-family: 'Geist';
+    /* font-family: 'Geist'; */
 }
 
 a {
@@ -774,3 +774,9 @@ video {
 
 }
 
+.tech-icon {
+	width: 100px;
+	height: 100px;
+	object-fit: contain;
+	margin-top: 4px; /* 정렬 맞출 때 필요할 수 있음 */
+}
